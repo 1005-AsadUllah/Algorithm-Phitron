@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+vector<int> v[1005];
+int parent[1005];
+bool vis[1005];
+int level[1005];
+void bfs(int src)
+{
+    queue<int> q;
+    q.push(src);
+    vis[src] = true;
+    while (!q.empty())
+    {
+        int par = q.front();
+        q.pop();
+        level[src] = 0;
+        vis[src] = true;
+
+        for (int child : v[par])
+        {
+            if (!vis[child])
+            {
+                q.push(child);
+                vis[child] = true;
+                level[child] = true;
+                parent[child] = par;
+            }
+        }
+    }
+}
+int main()
+{
+    int n, e;
+    cin >> n >> e;
+    while (e--)
+    {
+        int a, b;
+        cin >> a >> b;
+        v[a].push_back(b);
+        v[b].push_back(b);
+    }
+
+    int src = 0;
+    int des;
+    cin >> des;
+    memset(vis, false, sizeof(vis));
+    memset(level, -1, sizeof(level));
+    memset(parent, -1, sizeof(parent));
+    bfs(src);
+    cout << v[des].size() << endl;
+
+    return 0;
+}
