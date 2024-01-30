@@ -1,59 +1,72 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-vector<int> v[10005];
-int level[10005];
-bool vis[10005];
+int n, m;
+bool vis_A[1005][1005];
+bool vis_B[1005][1005];
+char a[1005][1005];
+int flag = 0;
+pair<int, int> p;
+vector<pair<int, int>> d = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
 
-void bfs(int le, vector<int> &v1) {
-    queue<int> q;
-    q.push(0);
-    level[0] = 0;
-    vis[0] = true;
+bool valid(int i, int j)
+{
+    return (i >= 0 && i < n && j >= 0 && j < m);
+}
 
-    while (!q.empty()) {
-        int parent = q.front();
-        q.pop();
-
-        if (level[parent] == le) {
-            v1.push_back(parent);
-        }
-
-        for (auto child : v[parent]) {
-            if (!vis[child]) {
-                q.push(child);
-                vis[child] = true;
-                level[child] = level[parent] + 1;
-            }
+void dfs_B(int si, int sj)
+{
+    if (a[si][sj] == 'B')
+    {
+        flag = 1;
+    }
+    cout << a[si][sj] << endl;
+    vis_B[si][sj] = true;
+    for (int i = 0; i < 4; i++)
+    {
+        int ci = si + d[i].first;
+        int cj = sj + d[i].second;
+        if (valid(ci, cj) && !vis_B[ci][cj] && a[ci][cj] == '.')
+        {
+            dfs_B(ci, cj);
         }
     }
 }
 
-int main() {
-    int n, e;
-    cin >> n >> e;
-
-    while (e--) {
-        int a, b;
-        cin >> a >> b;
-        v[a].push_back(b);
-        v[b].push_back(a);
+pair<int, int> dfs_A(int si, int sj)
+{
+    if (a[si][sj] == 'A')
+    {
+        p = {si, sj};
     }
-
-    int le;
-    cin >> le;
-
-    memset(level, -1, sizeof(level));
-    memset(vis, false, sizeof(vis));
-
-    vector<int> v1;
-    bfs(le, v1);
-
-    sort(v1.begin(), v1.end(), greater<int>());
-
-    for (auto val : v1) {
-        cout << val << " ";
+    vis_A[si][sj] = true;
+    for (int i = 0; i < 4; i++)
+    {
+        int ci = si + d[i].first;
+        int cj = sj + d[i].second;
+        if (valid(ci, cj) && !vis_A[ci][cj] && a[ci][cj] == '.')
+        {
+            dfs_A(ci, cj);
+        }
     }
+    return p;
+}
+
+int main()
+{
+    cin >> n >> m;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+            cin >> a[i][j];
+    }
+    // pair<int, int> start = dfs_A(0, 0);
+    dfs_B(1, 2);
+    if (flag)
+        cout << "YES" << endl;
+    else
+        cout << "NO" << endl;
 
     return 0;
 }
