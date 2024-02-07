@@ -1,16 +1,18 @@
 #include <bits/stdc++.h>
-
+#define ll long long
 using namespace std;
 int main()
 {
     int n;
     cin >> n;
-    int adj[n][n];
+    ll adj[n][n];
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
             cin >> adj[i][j];
+            if (adj[i][j] == -1)
+                adj[i][j] = INT_MAX;
         }
     }
     for (int k = 0; k < n; k++)
@@ -26,13 +28,15 @@ int main()
             }
         }
     }
+    int ans = INT_MIN;
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
-            cout << adj[i][j] << " ";
+            if (adj[i][j] < INT_MAX && adj[i][j] > ans)
+                ans = adj[i][j];
         }
-        cout << endl;
     }
+    cout << ans << endl;
     return 0;
 }
